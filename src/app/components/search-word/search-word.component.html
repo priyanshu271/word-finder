@@ -1,0 +1,47 @@
+<form [formGroup]="wordSearchForm" class="container mx-auto p-4">
+  <header class="text-4xl font-bold text-center mb-8 text-black-600">
+    Your dictionary
+  </header>
+  <div class="flex flex-col space-y-4">
+    <div class="flex items-center space-x-4">
+      <input type="text" formControlName="enteredWord"
+        class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 text-black"
+        placeholder="Enter a word">
+      <button (click)="onWordSearch()"
+        class="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600">Search</button>
+    </div>
+    <div class="text-4xl text-black-800">{{ displayWord }}</div>
+    <div class="text-sm text-gray-700">{{ phonetic }}</div>
+    <div *ngIf="this.wordInfo && this.wordInfo[0] && this.wordInfo[0].phonetics[0]" class="mt-4">
+      <audio controls>
+        <source [src]="this.wordInfo[0].phonetics[0].audio" type="audio/mpeg">
+      </audio>
+    </div>
+    <ng-container *ngFor="let meaning of meaningsInfo; let meaningIndex = index">
+      <div>
+        {{meaning.partOfSpeech}}
+      </div>
+      <ng-container *ngFor="let definition of meaning.definitions;let definitionIndex = index">
+        <div [ngClass]="definitionIndex >=2 ? 'hidden':''">
+          <ng-container *ngIf="definitionIndex < 2 ">
+            {{definition.definition}}
+          </ng-container>
+
+        </div>
+        <ng-container *ngIf="definitionIndex >= 2 && isExpanded(meaning.partOfSpeech)">
+          {{definition.definition}}
+          <hr>
+        </ng-container>
+      </ng-container>
+      <div class="flex flex-wrap gap-2">
+        <button *ngIf="!isExpanded(meaning.partOfSpeech)"
+          class="flex-shrink-0 bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600"
+          (click)="seeMoreDefinitions(meaning.partOfSpeech)">See more</button>
+        <button *ngIf="isExpanded(meaning.partOfSpeech)"
+          class="flex-shrink-0 bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600"
+          (click)="seeLess(meaning.partOfSpeech)">See less</button>
+      </div>
+      
+    </ng-container>
+  </div>
+</form>
