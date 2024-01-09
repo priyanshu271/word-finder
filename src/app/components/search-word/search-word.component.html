@@ -18,7 +18,7 @@
       </audio>
     </div>
     <ng-container *ngFor="let meaning of meaningsInfo; let meaningIndex = index">
-      <div>
+      <div class="text-xl text-black-900">
         {{meaning.partOfSpeech}}
       </div>
       <ng-container *ngFor="let definition of meaning.definitions;let definitionIndex = index">
