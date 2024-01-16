@@ -22,6 +22,8 @@ export class SearchWordComponent {
   public seeMoreDef:boolean=false;
   public seeLessDef:boolean=false;
   public dispPartOfSpeech: string='';
+  public requiredErrorFlag: boolean = false;
+  public invalidWord:boolean = false;
   public expandedPartOfSpeech: { [key: string]: boolean } = {}; // Object to track expanded state for each part of speech
 
   /**
@@ -37,16 +39,25 @@ export class SearchWordComponent {
   }
 
   public onWordSearch() {
+    if(!this.wordSearchForm.valid){
+      this.requiredErrorFlag = true;
+      this.meaningsInfo = [];
+    } else {
+      this.requiredErrorFlag = false;
     this.wordInfo = [];
     this.meaningsInfo = [];
     const wordName = this.wordSearchForm.controls['enteredWord'].value;
     this.wordSearchService.getWordInfo(wordName).subscribe((data: WordData[]) => {
+      this.invalidWord = false;
       this.wordInfo.push(...data);
       this.displayWord = this.wordInfo[0].word;
       this.phonetic = this.wordInfo[0].phonetic;
       this.phoneticSound = this.wordInfo[0].phonetics[0].audio;
       this.processWordData();
+    },error =>{
+      this.invalidWord = true;
     });
+  }
   }
 
   public processWordData() {

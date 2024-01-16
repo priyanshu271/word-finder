@@ -3,6 +3,12 @@
     Your dictionary
   </header>
   <div class="flex flex-col space-y-4">
+    <div *ngIf="requiredErrorFlag" class="text-red-500 bg-red-100 border border-red-500 p-4 m-2 font-bold">
+        Field should not be empty.
+    </div>
+    <div *ngIf="invalidWord" class="text-red-500 bg-red-100 border border-red-500 p-4 m-2 font-bold">
+     Entered word is invalid.
+  </div>
     <div class="flex items-center space-x-4">
       <input type="text" formControlName="enteredWord"
         class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 text-black"
@@ -10,9 +16,9 @@
       <button (click)="onWordSearch()"
         class="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600">Search</button>
     </div>
-    <div class="text-4xl text-black-800">{{ displayWord }}</div>
-    <div class="text-sm text-gray-700">{{ phonetic }}</div>
-    <div *ngIf="this.wordInfo && this.wordInfo[0] && this.wordInfo[0].phonetics[0]" class="mt-4">
+    <div  *ngIf="!requiredErrorFlag && !invalidWord"  class="text-4xl text-black-800">{{ displayWord }}</div>
+    <div  *ngIf="!requiredErrorFlag && !invalidWord"  class="text-sm text-gray-700">{{ phonetic }}</div>
+    <div *ngIf="this.wordInfo && this.wordInfo[0] && this.wordInfo[0].phonetics[0] && !requiredErrorFlag " class="mt-4">
       <audio controls>
         <source [src]="this.wordInfo[0].phonetics[0].audio" type="audio/mpeg">
       </audio>
@@ -41,7 +47,6 @@
           class="flex-shrink-0 bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600"
           (click)="seeLess(meaning.partOfSpeech)">See less</button>
       </div>
-      
     </ng-container>
   </div>
 </form>
